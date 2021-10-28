@@ -12,8 +12,12 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
 
 正如“代付”这个名字所表达的，一个余额为0的账户能够与合约进行交互，并不是因为相应的费用被免除了，而是有其他人支付了相应的费用。 Conflux 的内置合约 `SponsorWhitelistControl` 就负责管理代付机制。提供代付资金的人向`SponsorWhitelistControl`支付一笔CFX，并指定代付的合约地址即可。
 
-如果不想考虑任何代付的细节，只是希望为一个还没有设置代付的合约设置代付的话，可以按照下面的步骤进行交互。这里会略去繁琐的细节，并且尽可能地保证此设置能对几乎所有的合约通用。下面的截图中使用了 `Conflux Studio` 的图形化界面与`SponsorWhitelistControl`合约进行交互（`Conflux Studio`的使用方法可以参考 https://zhuanlan.zhihu.com/p/202741940）。
+如果不想考虑任何代付的细节，只是希望为一个还没有设置代付的合约设置代付的话，可以按照下面的步骤进行交互。这里会略去部分细节，并且尽可能地保证此设置能对几乎所有的合约通用。下面的截图中使用了 `Conflux Studio` 的图形化界面与`SponsorWhitelistControl`合约进行交互（`Conflux Studio`的使用方法可以参考 https://zhuanlan.zhihu.com/p/202741940）。测试网水龙头中一次可以获取 1000 CFX，下面的示例会分别为 gas 与存储抵押设置 400 CFX的代付。通过访问一次水龙头就可以完成下列的所有操作。实际环境中如何设置代付的金额请视具体场景而定。
 <!-- 文章最后也会提供对应的使用 `js-conflux-sdk` 的 javascript 脚本。 -->
+
+> 在测试网环境中，CFX 代币可以通过测试网水龙头获取（Conflux Studio 中均有入口，也可以使用[测试网水龙头DApp](http://faucet.confluxnetwork.org/)进行获取）。在主网（Conflux Tethys中）中除了可以自行设置代付外，还可以在Conflux Scan的[赞助合约页面](https://confluxscan.io/sponsor)页面向Conflux基金会申请，由Conflux基金会为合约代付。
+
+0. 部署一个合约。可以使用 `Conflux Studio` 中提供的 ERC20 模版创建并部署合约，这里略去具体的步骤。
 
 1. 合约的admin（或合约本身）在`SponsorWhitelistControl`中设置代付白名单列表。合约的 admin 默认为**合约的创建者**，关于 admin 更详细的说明可以参考 [Conflux 内置合约功能介绍](https://juejin.cn/post/6876330619798814728)中`AdminControl`的部分。
    1. 与`SponsorWhitelistControl`合约（地址`0x0888000000000000000000000000000000000001`）交互。选择`addPrivilegeByAdmin`方法。
@@ -24,7 +28,7 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
     ![](image/2021-10-24-14-37-24.png)
 2. 设置 Gas 代付。
    1. 仍然与`SponsorWhitelistControl`合约交互。选择`setSponsorForGas`方法。
-   2. 设置`CFX to Send`。填入`500`。
+   2. 设置`CFX to Send`。填入`400`。
    3. `contractAddr`设置为希望设置代付的合约地址。
    4. `upperBound`设置为`10000000000`（10G）
    5. `signer`可以进行任意设置，只要其具有足够多的 CFX 即可（大于设置的500）
@@ -32,13 +36,13 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
    ![](image/2021-10-24-15-10-35.png)
 3. 设置抵押代付。
    1. 与`SponsorWhitelistControl`合约交互。选择`setSponsorForCollateral`方法。
-   2. 设置`CFX to Send`。填入500。
+   2. 设置`CFX to Send`。填入`400`。
    3. `contractAddr`设置为希望设置代付的合约地址。
    4. `signer`可以进行任意设置，只要其具有足够多的 CFX 即可（大于设置的500）
    5. 同前estimate并执行
    ![](image/2021-10-24-15-14-07.png)
 
-至此，合约的代付设置完毕。在测试网环境中，CFX 代币可以通过测试网水龙头获取（Conflux Portal，Conflux Studio 中均有入口，也可以使用[测试网水龙头DApp](http://faucet.confluxnetwork.org/)进行获取）。在主网（Conflux Tethys中）可以在Conflux Scan的[赞助合约页面](https://confluxscan.io/sponsor)页面向Conflux基金会申请，由Conflux基金会为合约代付。
+至此，合约的代付设置完毕。
    
 
 ## 代付中的部分细节说明
@@ -47,7 +51,7 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
 
 ### 合约的代付白名单列表
 
-合约代付采用了白名单机制，在`SponsorWhitelistControl`合约中，为每个地址维护了一个白名单列表，只有位于白名单中的用户才能被代付。默认情况下该白名单为空，意味着代付未被启用。
+合约代付采用了白名单机制，在`SponsorWhitelistControl`合约中，为每个合约地址维护了一个用户白名单列表：只有位于白名单中的用户才能被代付。默认情况下该白名单为空，意味着代付未被启用。
 
 该列表由合约的 admin 调用`addPrivilegeByAdmin`进行设置，或者由合约自己调用`SponsorWhitelistControl`合约的addPrivilege方法。如果白名单中存在0地址，那么任何与合约交互的用户都可以被代付。同时该合约也能够调用对应的接口（remove）移除白名单内的用户。
 
@@ -55,9 +59,17 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
 
 ### Gas代付设置中的upperBound
 
-在 Gas 代付设置`setSponsorForGas`中除了需要设置发送的 CFX 数目与合约地址外，还需要设置参数 upperBound。该参数意味着每笔被代付交易能够消耗的Gas上限（单位为Drip，即10e-18 CFX），即该参数意味着被代付的交易需要满足`upperBound ≤ gasUsed * gasPrice`。如果交易所需的gas超过了upperBound, gas 费将不会被代付，而是由发起交易的用户本人进行支付。Conflux 的 tps 非常高，一般而言交易的 gasPrice 设为 1 即可满足需求。Conflux基金会在进行代付时会将该值设置为10G，这可以涵盖基本所有交易。
+```solidity
+// ------------------------------------------------------------------------
+// Someone will sponsor the gas cost for contract `contractAddr` with an
+// `upper_bound` for a single transaction.
+// ------------------------------------------------------------------------
+function setSponsorForGas(address contractAddr, uint upperBound) public payable {}
+```
 
-此外需要说明的是参数 upperBound 与参数 CFX to send 中间存在着约束关系，后者需要不小于前者的1000倍。注意到二者单位不一致，仅比较数字的话意味着`upperBound ≤ CFX_to_send * 10**15`。
+在 Gas 代付设置`setSponsorForGas`中除了需要设置发送的 CFX 数目（paybale关键字所要求）与合约地址外，还需要设置参数 upperBound。该参数意味着每笔被代付交易能够消耗的Gas上限（单位为Drip，即10e-18 CFX），即该参数意味着被代付的交易需要满足`upperBound ≤ gasUsed * gasPrice`。如果交易所需的gas超过了upperBound, gas 费将不会被代付，而是由发起交易的用户本人进行支付。Conflux 的 tps 非常高，一般而言交易的 gasPrice 设为 1 即可满足需求。Conflux基金会在进行代付时会将该值设置为 10G，这可以涵盖基本所有交易。
+
+此外需要说明的是参数 upperBound 与 发送的 CFX 中存在着约束关系，后者需要不小于前者的1000倍。在 Conflux Studio 中发送的CFX，注意到二者单位不一致，仅比较数字的话意味着`upperBound ≤ CFX_to_send * 10**15`。
 
 ### 存储抵押的代付
 
@@ -67,6 +79,20 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
 ### 代付余额的查询
 
 设置代付后，CFX 将从代付者转移至`SponsorWhitelistControl`合约。当代付发生时，`SponsorWhitelistControl`中对应的余额会被消耗(存储对应的则是被抵押)，可以通过`SponsorWhitelistControl`的`getSponsoredBalanceForCollateral`和`getSponsoredBalanceForGas`查询。
+
+```solidity
+/**
+* @dev get collateral sponsor address
+* @param contractAddr The address of the sponsored contract
+*/
+function getSponsorForCollateral(address contractAddr) public view returns (address) {}
+
+/**
+* @dev get current Sponsored Balance for collateral
+* @param contractAddr The address of the sponsored contract
+*/
+function getSponsoredBalanceForCollateral(address contractAddr) public view returns (uint) {}
+```
 
 ## 代付设计的讨论
 
@@ -82,7 +108,7 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
 
 但是相对的，存储抵押的代付可以被更容易地被占用，相比 gas 的消费，抵押占用的费用要高得多。每占用 1 KB的存储空间，对应的就会有 1 CFX 被锁定。如果真的存在攻击者有意地实施攻击，存储抵押的代付可能很容易被消耗殆尽。矿工是否可以通过这种方式获利可能需要比较仔细的讨论（矿工可以获取存储抵押的利息，但也付出了存储空间；每个矿工付出了相同的存储空间，但获利并不一致）。不过由于攻击者付出的代价非常小，这种攻击仍有可能会发生。
 
-> 恶意消耗存储的例子：例如ERC20合约，用户随机地将10-18 ERC20 代币发送给随机的地址就能够很容易地消耗存储
+> 恶意消耗存储的例子：例如ERC20合约，用户随机地将 10e-18 ERC20 代币发送给随机的地址就能够很容易地消耗存储
 
 ### 潜在的缺陷与收益
 
