@@ -22,7 +22,7 @@ fullnode 对机器配置的要求会低一些，如果想参与挖矿出块的�
 
 Conflux 网络节点程序的获取方式，首推到官方 Github [Conflux-rust](https://github.com/conflux-chain/conflux-rust) 仓库的 [Release](https://github.com/Conflux-Chain/conflux-rust/releases) 页面进行下载, 一般直接下载最新 Release 的版本即可。每个 Release 的版本不仅包含源代码，还提供 Windows, Mac, Linux 三大平台预编译好的节点程序。
 
-![](./image/conflux-release-page.png)
+![](image/conflux-release-page.png)
 
 **需要注意**的是目前主网和测试网节点程序的版本发布是两条线: 主网一般是 `Conflux-vx.x.x`, 测试网则为 `Conflux-vx.x.x-testnet`. 下载程序时需要根据个人的需求选择正确的版本线。
 
