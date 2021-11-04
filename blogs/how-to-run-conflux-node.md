@@ -206,6 +206,8 @@ Current Version: 1.1.3-testnet
 
 ### 如何运行一个 PoS 节点?
 
+TO BE UPDATE
+
 ## 参考
 
 * [官方运行节点文档](https://developer.confluxnetwork.org/run-a-node/en/how_to_get)
