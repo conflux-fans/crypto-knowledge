@@ -166,15 +166,43 @@ Current Version: 1.1.3-testnet
 
 ## 使用 Docker 运行节点
 
+对 Docker 比较熟悉的小伙伴也可以使用 Docker 来运行一个节点。官方提供了各个版本的 [Docker image](https://github.com/conflux-chain/conflux-docker) 可以自行 pull image 并运行。
+
+因为节点数据比较大，所以建议在运行 image 时，挂载一个数据目录用于存放节点数据。
+
+目前发布的镜像 tag 有三条 pipline:
+
+* `x.x.x-mainnet`: 主网镜像
+* `x.x.x-testnet`: 测试网镜像
+* `x.x.x`: 开发模式镜像，此模式下会自动初始化十个账号，可用于本地快速开发
+
 ## 常见问题
 
 ### 为什么节点同步区块高度卡主，不再增长?
 
+区块通过卡主，可查看日志或终端是否有错误，如果没有错误大概率是因为网络原因，可尝试重启节点。
+
 ### 修改配置后，重启节点需要清楚数据么?
+
+分情况，有的需要，有的不需要。如果配置涉及到数据存储或数据索引，配置若发生变化，需要重启节点，比如:
+
+* `persist_tx_index`
+* `executive_trace`
+* `persist_block_number_index`
+
+其他配置则一般不需要.
 
 ### 目前的 archive node 数据有多大?
 
+截止到 2021.11.04 区块数据的压缩包大小为不到 90 G
+
 ### 如何参与挖矿?
+
+挖矿需要使用 GPU 参与，具体可参看[这里](https://forum.conflux.fun/t/conflux-tethys-gpu-mining-instruction-v1-1-4/3775)
+
+### 如何快速同步数据，从而运行一个 archive node 
+
+可使用 [fullnode-node](https://github.com/conflux-fans/fullnode-tool) 下载归档节点的数据快照，使用快照的节点数据，可以快速同步到最新数据。
 
 ### 如何运行一个 PoS 节点?
 
