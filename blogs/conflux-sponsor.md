@@ -118,7 +118,7 @@ function getSponsoredBalanceForCollateral(address contractAddr) public view retu
 
 ## 参考文章
 
-[Conflux 内置合约功能介绍](https://juejin.cn/post/6876330619798814728)：Conflux 官方对 Conflux 的内置合约进行的介绍，信息很详尽。
-[Conflux Studio 使用介绍](https://zhuanlan.zhihu.com/p/202741940): Conflux Studio 的操作方法介绍。值得一提的是现在也有web版可以使用 https://conflux.ide.black/（可能加载会比较慢）
-[新项目如何高效启动？Conflux 代付机制了解一下](https://juejin.cn/post/6904212662629236749): Conflux 官方对代付机制的介绍。
-[Conflux 研究院 | 存储押金机制](https://juejin.cn/post/6879964961854980104)：关于存储抵押的介绍
+* [Conflux 内置合约功能介绍](https://juejin.cn/post/6876330619798814728)：Conflux 官方对 Conflux 的内置合约进行的介绍，信息很详尽。
+* [Conflux Studio 使用介绍](https://zhuanlan.zhihu.com/p/202741940): Conflux Studio 的操作方法介绍。值得一提的是现在也有web版可以使用 https://conflux.ide.black/（可能加载会比较慢）
+* [新项目如何高效启动？Conflux 代付机制了解一下](https://juejin.cn/post/6904212662629236749): Conflux 官方对代付机制的介绍。
+* [Conflux 研究院 | 存储押金机制](https://juejin.cn/post/6879964961854980104)：关于存储抵押的介绍
