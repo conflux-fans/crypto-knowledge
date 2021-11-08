@@ -164,6 +164,14 @@ Current Version: 1.1.3-testnet
 
 你也可以通过 `cfx_getStatus` 方法获取当前节点的最新 epochNumber，并跟 scan 的最新 epoch 比较从而判断数据是否已经同步到了最新。
 
+### RPC 服务
+
+节点启动之后，并且打开了 RPC 相关的端口号和配置的话，则钱包，Dapp 可以通过 RPC url 访问节点. 例如
+
+```http://node-ip:12537``` 
+
+Portal 钱包中添加网络，或者 SDK 实例的时候可以使用此地址.
+
 ## 使用 Docker 运行节点
 
 对 Docker 比较熟悉的小伙伴也可以使用 Docker 来运行一个节点。官方提供了各个版本的 [Docker image](https://github.com/conflux-chain/conflux-docker) 可以自行 pull image 并运行。
@@ -177,6 +185,11 @@ Current Version: 1.1.3-testnet
 * `x.x.x`: 开发模式镜像，此模式下会自动初始化十个账号，可用于本地快速开发
 
 ## 常见问题
+
+### 为什么重启后，同步需要很久？
+
+节点重启后会从上个 checkpoint 开始同步，并重新 replay 区块数据，根据当前距离上一 checkpoint 的远近，需要等待不同的时长，才能开始从最新区块开始同步.
+这是正常现象，一般会等几分钟到十几分钟不等。
 
 ### 为什么节点同步区块高度卡主，不再增长?
 
