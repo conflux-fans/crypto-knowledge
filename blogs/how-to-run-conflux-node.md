@@ -18,6 +18,8 @@ Conflux 的节点分为三种类型：归档节点(archivenode)，全节点(full
 
 fullnode 对机器配置的要求会低一些，如果想参与挖矿出块的话，需要有单独的`显卡`。
 
+另外: 建议将系统的最大文件打开数调高到 `10000`。一般 Linux 系统默认为 1024, 不太够用。
+
 ## 如何获取节点程序和配置
 
 Conflux 网络节点程序的获取方式，首推到官方 Github [Conflux-rust](https://github.com/conflux-chain/conflux-rust) 仓库的 [Release](https://github.com/Conflux-Chain/conflux-rust/releases) 页面进行下载, 一般直接下载最新 Release 的版本即可。每个 Release 的版本不仅包含源代码，还提供 Windows, Mac, Linux 三大平台预编译好的节点程序。
@@ -216,6 +218,10 @@ Portal 钱包中添加网络，或者 SDK 实例的时候可以使用此地址.
 ### 如何快速同步数据，从而运行一个 archive node 
 
 可使用 [fullnode-node](https://github.com/conflux-fans/fullnode-tool) 下载归档节点的数据快照，使用快照的节点数据，可以快速同步到最新数据。
+
+### 节点运行 error 日志怎么看?
+
+如果是通过 `start.sh` 运行的节点，可以在相同目录中的 `stderr.txt` 查看错误原因。
 
 ### 如何运行一个 PoS 节点?
 
