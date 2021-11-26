@@ -45,6 +45,8 @@ Pending 的交易, 如果被成功传播到 Scan 所使用节点的交易池内�
 
 ## 如何正确的设置 gasPrice
 
+交易的打包执行快慢主要受交易的 gasPrice 所影响，gasPrice 越高，上链越快，所以正确的设置 gasPrice 非常重要。
+
 可以使用 fullnode 的 `cfx_gasPrice` RPC 方法获取一个建议的 gasPrice 值。该方法会根据一定数量最新的区块的 gas 使用情况及其中的交易的 gasPrice 来给出一个推荐值。
 
 最理想的方式是根据网络节点交易池中交易的  gasPrice 设置情况来计算一个合适的 gasPrice，但当前缺少相关的 RPC 方法支持。
