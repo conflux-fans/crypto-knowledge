@@ -121,7 +121,7 @@ CFX:TYPE.USER:AAKPBX01FZM1XP89CB7URF6YVYXH3GGX5E9HZ07B38
 
 ## Base32 使用场景
 
-`Conflux-rust` 从 `v1.1.1` 开始所有涉及到地址的 RPC 方法均只接受 base32 格式地址，Portal 也同步进行了升级默认显示新格式的地址。总结来说主要场景均需使用新地址包括:
+`Conflux-rust` 从 `v1.1.1` 开始所有涉及到地址的 RPC 方法均只接受 base32 格式地址，Portal 也同步进行了升级默认显示新格式的地址。总结来说主要场景均需使用新地址:
 
 * RPC 交互
 * 钱包转账
@@ -133,7 +133,8 @@ CFX:TYPE.USER:AAKPBX01FZM1XP89CB7URF6YVYXH3GGX5E9HZ07B38
 
 ## SDK address 方法 和 Scan 地址转换工具
 
-Conflux 各语言 SDK 均提供了两种格式地址的转换方法，官方开发 JS, Go, Java, 社区开发的 C++ 等。以 js-sdk 为例:
+Conflux 各语言 SDK 均提供了两种格式地址的转换方法。官方开发的 JS, Go, Java, Python 语言 SDK，以及社区开发的 C++ SDK 等。
+以 js-sdk 为例:
 
 ```js
 const {format} = require('js-conflux-sdk');
@@ -206,7 +207,7 @@ Conflux 的 [Coin 编码是 503](https://github.com/satoshilabs/slips/blob/maste
 目前以太坊网络中只有以 `0x1` 开头的地址也能在 Conflux 网络中使用，如果想一个地址在两个网络使用，可以尝试生成一些 `0x1` 开头的地址。可以使用 `js-conflux-sdk` 中的 cli 工具 `cfxjs` 来生成：
 
 ```sh
-$ cfxjs genEthCMPTaccount  
+$ npx cfxjs genEthCMPTaccount  
 PrivateKey:  0x6c6faf9644eafe16211ad6a222f7e2a22eb3b10f3145a6226ef0b4c9ef618413
 Address:  0x15d4b49ffd7a75a86901cdfce54d85548d3698dd
 ```
