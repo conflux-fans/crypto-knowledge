@@ -6,7 +6,7 @@ Conflux 最初使用同以太坊一样的 `hex40` 格式地址，但对地址首
 * `0x1` 普通外部账户地址
 * `0x8` 合约地址
 
-但由于地址格式类似，又不能完全互相使用(因为Conflux限制了固定的前缀)，导致极易与以太坊地址发生混用，从而导致资产丢失。为了解决此问题，通过[CIP-37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) 引入了新的 Base32 格式的地址。
+但由于地址格式类似，又不能完全互相使用(因为Conflux限制了固定的前缀)，导致极易与以太坊地址混用，进而导致资产丢失。为了解决此问题，Conflux 通过[CIP-37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) 引入了新的 Base32 格式的地址。
 本文将对 Conflux 地址做一个详细介绍。
 
 ## 以太坊 hex40 地址
@@ -35,7 +35,7 @@ Conflux 最初使用同以太坊一样的 `hex40` 格式地址，但对地址首
 
 ![](./image/address/eth-address-generate-process.png)
 
-并且以太坊通过[EIP-55](https://eips.ethereum.org/EIPS/eip-55)实现了一个带校验的地址格式，它的实现非常简单，即对地址做一个keccak256哈希，然后按位对齐，将`哈希值>=8`的字母变成大写：
+并且以太坊通过[EIP-55](https://eips.ethereum.org/EIPS/eip-55)引入了一个带校验的地址格式，它的实现非常简单，即对地址做一个keccak256哈希，然后按位对齐，将`哈希值>=8`的字母变成大写：
 
 ![](./image/address/eth-checksum.png)
 
@@ -48,7 +48,7 @@ Conflux 的地址生成规则同以太坊一样，只是地址生成后强制将
 * 0x`7`defad05b632ba2cef7ea20731021657e20a7596
 * 0x`1`defad05b632ba2cef7ea20731021657e20a7596
 
-然后对 0x1 开头的地址进行 base32 编码，得到 Conflux 目前使用的地址:
+然后对 0x1 开头的地址进行 base32 编码，得到 Conflux 目前使用的 base32 格式地址:
 
 ```cfx:aarc9abycue0hhzgyrr53m6cxedgccrmmyybjgh4xg```
 
@@ -106,10 +106,10 @@ netprefix + ":" + payload + checksum
 
 base32 地址中可以包含一个可选的地址类型信息, 该信息不参与 checksum 计算，地址类型有如下四种:
 
-* `type.contract`
-* `type.user`
-* `type.builtin`
-* `type.null`
+* `type.contract` 普通合约
+* `type.user` 普通用户
+* `type.builtin` - 内置合约
+* `type.null` 零地址类型
 
 通常带类型信息的地址使用大写字母表示
 
@@ -117,19 +117,19 @@ base32 地址中可以包含一个可选的地址类型信息, 该信息不参�
 CFX:TYPE.USER:AAKPBX01FZM1XP89CB7URF6YVYXH3GGX5E9HZ07B38
 ```
 
-具体的地址定义参看 [CIP-37规范](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md)
+具体的地址规范参看 [CIP-37规范](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md)
 
 ## Base32 使用场景
 
-`Conflux-rust` 从 `v1.1.1` 开始所有涉及到地址的 RPC 方法均只接受 base32 格式地址，Portal 也同步进行了升级默认显示新格式的地址。总结来说主要场景均需使用新地址:
+`Conflux-rust` 从 `v1.1.1` 开始所有涉及到地址的 RPC 方法均只接受 base32 格式地址，Portal 也同步进行了升级默认显示和接受新格式的地址。主要场景均需使用新地址:
 
 * RPC 交互
 * 钱包转账
 * 使用 SDK 开发应用
 
-目前`只有一种场景`需要使用 hex40 checksum 格式地址，即是在开发 Solidity 智能合约时，在 Solidity 代码中只能使用 hex40 checksum 地址（受 Solidity 编译器限制)
+目前`只有一种场景`需要使用 hex40 checksum 格式地址，即是在开发 Solidity 智能合约时，在 **Solidity 代码**中只能使用 hex40 checksum 地址（受 Solidity 编译器限制)
 
-另外在跟合约方法进行交互时，涉及到传参或返回结果的地方，本质也要求使用 hex40 地址。但使用 Conflux 的 SDK 进行交互，SDK 会自动进行地址格式转换，因此可以说此种场景也是使用 base32 格式地址。
+另外在跟合约方法进行交互时，涉及到传参或返回结果的地方，本质也要求使用 ABI 编码的 hex40 地址。但使用 Conflux 的 SDK 进行交互时，SDK 会自动进行地址格式转换，因此可以说此种场景也是使用 base32 格式地址。
 
 ## SDK address 方法 和 Scan 地址转换工具
 
