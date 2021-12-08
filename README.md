@@ -2,6 +2,7 @@
 
 ## Notes
 
+* [交易执行失败的原因](./blogs/why-tx-exec-failed.md)
 * [Conflux 地址介绍](./blogs/conflux-address.md)
 * [交易发送失败的常见原因](./blogs/why-sending-tx-failed.md)
 * [交易为什么一直 Pending](./blogs/why-tx-is-pending.md)
