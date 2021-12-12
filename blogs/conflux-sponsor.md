@@ -67,7 +67,7 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
 function setSponsorForGas(address contractAddr, uint upperBound) public payable {}
 ```
 
-在 Gas 代付设置`setSponsorForGas`中除了需要设置发送的 CFX 数目（paybale关键字所要求）与合约地址外，还需要设置参数 upperBound。该参数意味着每笔被代付交易能够消耗的Gas上限（单位为Drip，即10e-18 CFX），即该参数意味着被代付的交易需要满足`upperBound ≤ gasUsed * gasPrice`。如果交易所需的gas超过了upperBound, gas 费将不会被代付，而是由发起交易的用户本人进行支付。Conflux 的 tps 非常高，一般而言交易的 gasPrice 设为 1 即可满足需求。Conflux基金会在进行代付时会将该值设置为 10G，这可以涵盖基本所有交易。
+在 Gas 代付设置`setSponsorForGas`中除了需要设置发送的 CFX 数目（paybale关键字所要求）与合约地址外，还需要设置参数 upperBound。该参数意味着每笔被代付交易能够消耗的Gas上限（单位为Drip，即10e-18 CFX），即该参数意味着被代付的交易需要满足`gasUsed * gasPrice ≤ upperBound`。如果交易所需的gas超过了upperBound, gas 费将不会被代付，而是由发起交易的用户本人进行支付。Conflux 的 tps 非常高，一般而言交易的 gasPrice 设为 1 即可满足需求。Conflux基金会在进行代付时会将该值设置为 10G，这可以涵盖基本所有交易。
 
 此外需要说明的是参数 upperBound 与 发送的 CFX 中存在着约束关系，后者需要不小于前者的1000倍。在 Conflux Studio 中发送的CFX，注意到二者单位不一致，仅比较数字的话意味着`upperBound ≤ CFX_to_send * 10**15`。
 
