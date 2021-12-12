@@ -28,7 +28,7 @@ Conflux 中的代付机制，简而言之，就是允许其他用户为某个智
     ![](image/2021-10-24-14-37-24.png)
 2. 设置 Gas 代付。
    1. 仍然与`SponsorWhitelistControl`合约交互。选择`setSponsorForGas`方法。
-   2. 设置`CFX to Send`。填入`400`。
+   2. 设置`CFX to Send`。填入`500`。
    3. `contractAddr`设置为希望设置代付的合约地址。
    4. `upperBound`设置为`10000000000`（10G）
    5. `signer`可以进行任意设置，只要其具有足够多的 CFX 即可（大于设置的500）
