@@ -2,6 +2,7 @@
 
 ## Notes
 
+* [Portal 如何加速交易](./blogs/portal-accelerate.md)
 * [Conflux 地址介绍](./blogs/conflux-address.md)
 * [Conflux 的 PoS Finality 与解读](./blogs/PoS-finality-concept.md)
 * [如何运行一个 Conflux 节点](./blogs/how-to-run-conflux-node.md)
