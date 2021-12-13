@@ -22,15 +22,20 @@
 
 <img src="./image/portal/tx-pending-summary.png" width="300px"/>
 
+### 交易加速
+
 这时可以根据 [why-tx-is-pending](./why-tx-is-pending.md) 这篇文章确认交易 pending 的原因。如果交易的 pending 原因是 Ready to pack (nonce 和 余额均没有问题) 则可以尝试通过提高 gasPrice 来加速交易。Portal 对于 pending 的交易提供了`加速`或`取消` 的功能。
+点击加速可以提高交易的 `gasPrice`，这时需要`手动`将 gasPrice `提高 10000`。
 
 <img src="./image/portal/tx-pending-accelerate.png" width="300px"/>
 
-点击加速可以提高交易的 `gasPrice`，这时需要`手动`将 gasPrice `提高 10000`。
+### 再次加速
 
 如果交易仍然一直处于 pending 状态，可再次尝试`加速该交易|取消操作`提高 gasPrice 并重新发送。
 
 <img src="./image/portal/tx-accelerate-3.png" width="300px"/>
+
+### 手动设置 nonce 和 gasPrice 加速
 
 另外也可以在设置中打开`允许手动设置交易 nonce` 的高级功能，然后新发送一笔交易，并把交易的 nonce 设置为一致处于 pending 状态交易的 nonce，并提高 gasPrice 点击发送即可.
 
