@@ -20,6 +20,10 @@ fullnode 对机器配置的要求会低一些，如果想参与挖矿出块的�
 
 另外: 建议将系统的最大文件打开数调高到 `10000`。一般 Linux 系统默认为 1024, 不太够用。
 
+阿里云建议使用通用型g7或性能更强配置；AWS推荐m5.xlarge或性能更强配置。
+
+作为rpc节点时，最好使用高性能磁盘：阿里云推荐磁盘使用ESSD盘；AWS至少使用gp3类型，不低于6000iops，或者使用Provisioned IOPS SSD按需求自定义。
+
 ## 如何获取节点程序和配置
 
 Conflux 网络节点程序的获取方式，首推到官方 Github [Conflux-rust](https://github.com/conflux-chain/conflux-rust) 仓库的 [Release](https://github.com/Conflux-Chain/conflux-rust/releases) 页面进行下载, 一般直接下载最新 Release 的版本即可。每个 Release 的版本不仅包含源代码，还提供 Windows, Mac, Linux 三大平台预编译好的节点程序。
