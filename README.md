@@ -2,6 +2,7 @@
 
 ## Notes
 
+* [Conflux 与以太坊区别](./blogs/Conflux-vs-Ethereum.md)
 * [Portal 如何加速交易](./blogs/portal-accelerate.md)
 * [交易执行失败的原因](./blogs/why-tx-exec-failed.md)
 * [Conflux 地址介绍](./blogs/conflux-address.md)
