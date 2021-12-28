@@ -6,6 +6,12 @@ Conflux 是一个兼容 EVM 的高性能公链。通过树图账本结构和 GHA
 
 Conflux 账本采用[树图结构](https://confluxnetwork.org/files/Conflux_Technical_Presentation_20200309.pdf)，以太坊的账本则是链式结构。
 
+## 延迟执行
+
+在以太坊中，交易被打包之后即被执行。
+
+在 Conflux 交易被打包后不会立刻被执行，需要延迟 5 个 Epoch 才会被执行
+
 ## [地址格式区别](./conflux-address.md)
 
 Conflux 采用 base32 编码地址：
