@@ -2,6 +2,7 @@
 
 ## Notes
 
+* [Java 如何调用 Solidity 合约方法及解析返回值](./blogs/java-sdk-abi-encode.md)
 * [Conflux 与以太坊区别](./blogs/Conflux-vs-Ethereum.md)
 * [Portal 如何加速交易](./blogs/portal-accelerate.md)
 * [交易执行失败的原因](./blogs/why-tx-exec-failed.md)
