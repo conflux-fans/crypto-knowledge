@@ -242,7 +242,73 @@ account.call("cfxtest:aat3bzj1mhgubvfj4psdety7d5x46a9v92gtj86mvj", "methodName",
 
 ## Event 编解码
 
-TODO
+合约的写入操作需要等待交易被打包并执行，因此无法直接获取返回结果，这是可以通过 emit Event 的方式，将数据写入到区块链中，后续可以通过获取`交易 receipt` 或者 `cfx_getLogs|eth_getLogs` 方式获取到这些 log 数据，然后通过 abi decode 解析出来。
+
+关于 Event 的编码方式，可参看 [Solidity 官方介绍](https://docs.soliditylang.org/en/v0.8.11/abi-spec.html?highlight=event#events)。
+
+比如标准的 ERC20 合约会包含 `Transfer` 事件:
+
+```js
+event Transfer(address indexed from, address indexed to, uint256 value)
+```
+该事件的名字为 `Transfer`, 包含两个 `indexed` 参数 `from`, `to`, 以及一个非 indexed 的参数 `value`
+
+该事件产生的 log 是这样的:
+
+```js
+{
+    "address": "0x3ae298749fac1040d47ce50953dd283b2bd5b3cf",
+    "blockHash": "0xfb2aadee632487699f265094d2522306f48347c0fa2b4b1963a3e0544548e6a8",
+    "blockNumber": "0x48756",
+    "data": "0x0000000000000000000000000000000000000000000000000de0b6b3a7640000",
+    "logIndex": "0x0",
+    "removed": false,
+    "topics": [
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        "0x0000000000000000000000003d69d968e3673e188b2d2d42b6a385686186258f",
+        "0x00000000000000000000000068a4275c344548d19e84c680ae2353ea91ed56f9"
+    ],
+    "transactionHash": "0x6f9a9c6ef287089c03c91077a849fb274cf034a66264a81b131ea2ba6fc106ea",
+    "transactionIndex": "0x0",
+    "transactionLogIndex": "0x0"
+}
+```
+
+其中包含：
+
+1. 基本信息：地址，区块hash，交易hash，各种索引
+2. topics 数组（最多四条）
+3. data 一段数据
+
+其中 topics 最多包含四条内容，`第一条为 Event 的签名`，剩余则为 ABI 编码的 `indexed` 参数，最多三个。而所有非 indexed 参数，则被包含在 data 里面。
+因此如果想要解析事件的参数，需要多 topics 和 data 进行 ABI decode 操作。
+
+### indexed 参数解析
+
+可使用 web3j abi 包的 `DefaultFunctionReturnDecoder.decodeIndexedValue` 类来解析 topics 和 data。
+
+比如我们来解析 Transfer 事件 `from`, `to` 参数。此两个参数为 indexed 的，所以位于 topics 中（从第二条开始）.
+
+```java
+// 根据事件的参数类型，指定需要解析成 java 类型
+TypeReference addressTypeReference = TypeReference.create(Address.class);
+String fromTopic = "0x0000000000000000000000003d69d968e3673e188b2d2d42b6a385686186258f"; // topics 的第二条
+Address from = (Address) DefaultFunctionReturnDecoder.decodeIndexedValue(fromTopic, addressTypeReference);
+System.out.println(from);
+// 0x3d69d968e3673e188b2d2d42b6a385686186258f
+```
+
+### 非 indexed 参数解析
+
+非 indexed 的参数会被 abi encode 存储于 data 字段中，可使用 `DefaultFunctionReturnDecoder.decode` 来解析
+
+```java
+String valueData = "0x0000000000000000000000000000000000000000000000000de0b6b3a7640000";
+TypeReference uint256TypeReference = TypeReference.create(Uint256.class);
+List<TypeReference<Type>> decodeTypes = Arrays.asList(uint256TypeReference);
+List<Type> list = DefaultFunctionReturnDecoder.decode(valueData, decodeTypes);
+System.out.println(list.get(0).getValue());
+```
 
 ## 常见问题
 
