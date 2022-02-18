@@ -113,6 +113,8 @@ Conflux-rust 还提供一个开发者(dev)模式，该模式下会启动一个�
 * `mode`: 将模式选项配置为 `dev`
 * `dev_block_interval_ms`: 出块间隔时间, 单位为毫秒(ms)
 
+从 `Conflux-rust v2.0` 开始，dev 模式不会自动打开 http RPC port，需要用户手动打开
+
 ### 配置 genesis 账户
 
 在 dev 模式下可以通过一个单独的 `genesis_secrets.txt` 文件，配置 genesis 账户，该文件中需要一行放置一个私钥（不带0x前缀）, 并在配置文件中添加 `genesis_secrets` 配置项，将值配置为 该文件的路径:
