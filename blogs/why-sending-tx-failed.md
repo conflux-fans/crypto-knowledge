@@ -59,7 +59,7 @@
     "error": {
         "code": -32602,
         "message": "Invalid parameters: tx",
-        "data": "Tx with same nonce already inserted. To replace it, you need to specify a gas price > {}"
+        "data": "Failed ipmorted to deferred pool: Tx with same nonce already inserted. To replace it, you need to specify a gas price > {}"
     }
 }
 ```
