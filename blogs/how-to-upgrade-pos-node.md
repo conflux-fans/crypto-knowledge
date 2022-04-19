@@ -42,7 +42,7 @@ PoS 节点运营者，需要保证 PoS 节点的稳定性，节点越稳定收�
 - 节点同步区块是否落后：可是用本地节点最新 epochNumber  与官方节点的 epochNumber 比较
 - 节点是否正常参与 PoS 投票：可通过 PoS RPC 获取 PoS 的投票交易来判断
 
-另外如果想重新生成 `pos_config/pos_key` 文件，需要改将 `pos_db/secure_storage.json` 文件一并删除，然后重启即可。
+另外如果想重新生成 `pos_config/pos_key` 文件，需要将 `pos_db/secure_storage.json` 文件一并删除，然后重启即可。
 
 ## 如何升级节点保证不被强制退休
 

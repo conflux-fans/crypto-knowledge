@@ -194,13 +194,15 @@ address.decodeCfxAddress(base32Address);
 
 ![](./image/address/address-convert-tool.png)
 
+**不要用MetaMask 地址转换为 Base32 格式接受 Core Space 资产，不要用 Fluent 地址转换为 hex40 接受eSpace 或以太坊资产**
+
 ## bip44 coin number
 
 Conflux 同以太坊，比特币一样也遵循 bip32, bip44, bip39 所引进的账户体系。即可以使用`助记词`生成 `HD` 钱包。
 
-例如以太坊的钱包派生路径为： `m/44'/60'/0'/0/0` 这里 60 是 ETH 的 coin 编码。
+例如以太坊的钱包派生路径为： `m/44'/60'/0'/0/0` 这里 `60` 是 ETH 的 coin 编码。
 
-Conflux 的 [Coin 编码是 503](https://github.com/satoshilabs/slips/blob/master/slip-0044.md), 其派生路径为: `m/44'/503'/0'/0/0` 
+Conflux 的 [Coin 编码是 503](https://github.com/satoshilabs/slips/blob/master/slip-0044.md), 其派生路径为: `m/44'/503'/0'/0/0`
 
 ## 0x1 兼容地址生成工具
 
@@ -215,3 +217,42 @@ Address:  0x15d4b49ffd7a75a86901cdfce54d85548d3698dd
 另外还有一个[网页工具](https://conflux-fans.github.io/web-toolkit/#/address-filter)，可以从助记词中快速查找一个 0x1 账号的索引和私钥。**安全起见使用时请断网并打开隐私模式**.
 
 ![](./image/address/address-filter.png)
+
+## eSpace 地址
+
+Conflux 从 v2.0 开始引入了一个全新的网络空间 eSpace （原空间被命名为 Core Space），该空间实现了以太坊的完全兼容，允许用户和开发者，直接使用以太坊生态的钱包和工具跟该空间交互。
+
+具体而言用户可以直接使用 MetaMask 创建账号，账号的格式同以太坊完全相同也是 hex40 格式的地址。
+
+需要注意的一点：一个 Core Space 的账户私钥可以直接导入 MetaMask 使用，但 Core Space 账户地址，通过地址格式转换之后与同私钥导入 MetaMask 获取的地址大概率不同。
+
+**不要用MetaMask 地址转换为 Base32 接受 Core Space 资产，不要用 Fluent 地址转换为 hex40 接受 eSpace 或以太坊资产**
+
+### Core Space 账号在 eSpace 的映射地址
+
+为了实现资产在两个 Space 的互跨，Conflux 2.0 同时提供了一个 CrossSpaceCall 内置合约，不仅可以实现 CFX 互跨，也可以在 Core Space 调用 eSpace 的合约方法。
+
+每个 Core Space 的地址，在 eSpace 都对应一个映射地址。映射地址[在 CFX 空间互跨时起着非常重要的作用](https://developer.confluxnetwork.org/conflux-doc/docs/EVM-Space/cross_space_call)。
+
+映射地址是通过固定的规则计算生成的：
+
+1. 将 base32 地址 decode 为 bytes 类型
+2. 对 bytes 进行 keccak 哈希计算
+3. 取哈希结果的后 20 bytes，转换为 hex 格式
+
+```js
+const { address } = require('js-conflux-sdk');
+
+```
+
+Core Space 账户私钥，可以通过内置合约，操控其在 eSpace 映射地址上的资产。
+
+## FAQs
+
+### 1. 通过 Scan 地址转换工具，将 base32 地址转换为 hex40 格式，可用于接受 eSpace 或以太坊的资产么？
+
+不行
+
+### 2. 为什么同一套助记词导入 Fluent 后生成的地址 (转hex40后) 跟导入 MetaMask 生成地址不一样？
+
+因为两个钱包使用的 `bip44 路径` 中的 CoinType 不同，Conflux 为 `503`，以太坊为 `60`
