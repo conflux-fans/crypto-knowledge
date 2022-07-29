@@ -1,59 +1,63 @@
 # 如何运行一个 Conflux 节点
 
-Conflux 是一个基于 PoW(工作量证明) 的完全去中心化网络，如果想要参与此去中心化网络挖矿，或者拥有自己的 RPC 服务需要自己运行一个 node (也称 client)。本文将介绍如何运行一个 Conflux 节点。
+Conflux 是一个基于 PoW(工作量证明) + PoS(权益证明) 的完全去中心化网络，如果想要参与此去中心化网络挖矿，或者拥有自己的 RPC 服务需要自己运行一个 node (也称 client)。本文将介绍如何运行一个 Conflux 节点。
 
-## Archivenode VS fullnode
+## ArchiveNode VS FullNode
 
-Conflux 的节点分为三种类型：归档节点(archivenode)，全节点(fullnode)，轻节点(lightnode)。不同类型节点的区别在于保留存储的数据量不同，归档节点最全，轻节点最少。当然存储数据越多消耗的系统硬件资源越多。关于不同类型节点的详细介绍[参看这里](https://juejin.cn/post/6854573216930693134)
+Conflux 的节点分为三种类型：归档节点(ArchiveNode)，全节点(FullNode)，轻节点(LightNode)。不同类型节点的区别在于保留存储的数据量不同，归档节点最全，轻节点最少。当然存储数据越多消耗的系统硬件资源越多。关于不同类型节点的详细介绍[参看这里](https://juejin.cn/post/6854573216930693134)
 
-通常情况下如果想参与挖矿,运行一个全节点即可，如果想作为 RPC 服务来使用则需要运行一个 Archivenode. 轻节点则主要用于作为钱包来使用。
+通常情况下如果想参与挖矿,运行一个全节点即可，如果想作为 RPC 服务来使用则需要运行一个 ArchiveNode. 轻节点则主要用于作为钱包来使用。
 
 ## 机器配置
 
-运行一个 archivenode 的机器资源大致如下：
+运行一个 ArchiveNode 的机器资源大致如下：
 
 * CPU：`4Core`
 * 内存：`16G`
-* 硬盘：`500G`
+* 硬盘：`1T`
 
-fullnode 对机器配置的要求会低一些，如果想参与挖矿出块的话，需要有单独的`显卡`。
+Fullnode 对机器配置的要求会低一些，如果想参与挖矿出块的话，需要有单独的`显卡`。
 
-另外: 建议将系统的最大文件打开数调高到 `10000`。一般 Linux 系统默认为 1024, 不太够用。
+> 另外: 建议将系统的最大文件打开数调高到 `10000`。一般 Linux 系统默认为 1024, 不太够用。
 
-阿里云建议使用通用型g7或性能更强配置；AWS推荐m5.xlarge或性能更强配置。
+阿里云建议使用通用型 G7 或性能更强配置；AWS推荐 m5.xlarge 或性能更强配置。
 
-作为rpc节点时，最好使用高性能磁盘：阿里云推荐磁盘使用ESSD盘；AWS至少使用gp3类型，不低于6000iops，或者使用Provisioned IOPS SSD按需求自定义。
+作为 RPC 节点时，最好使用高性能磁盘：阿里云推荐磁盘使用 ESSD 盘；AWS 至少使用 GP3 类型，不低于6000IOPS，或者使用 Provisioned IOPS SSD按需求自定义。
 
 ## 如何获取节点程序和配置
 
-Conflux 网络节点程序的获取方式，首推到官方 Github [Conflux-rust](https://github.com/conflux-chain/conflux-rust) 仓库的 [Release](https://github.com/Conflux-Chain/conflux-rust/releases) 页面进行下载, 一般直接下载最新 Release 的版本即可。每个 Release 的版本不仅包含源代码，还提供 Windows, Mac, Linux 三大平台预编译好的节点程序。
+Conflux 网络节点程序的获取方式，首推到官方 Github Conflux-rust 仓库的 [Release 页面](https://github.com/Conflux-Chain/conflux-rust/releases) 进行下载, 一般直接下载最新 Release 的版本即可。每个 Release 的版本不仅包含源代码，还提供 Windows, Mac, Linux 三大平台预编译好的节点程序。
 
 ![](image/conflux-release-page.png)
 
-**需要注意**的是目前主网和测试网节点程序的版本发布是两条线: 主网一般是 `Conflux-vx.x.x`, 测试网则为 `Conflux-vx.x.x-testnet`. 下载程序时需要根据个人的需求选择正确的版本线。
+**需要注意**的是目前主网和测试网节点程序的版本发布是两条线: 主网一般是 `conflux-vx.x.x`, 测试网则为 `conflux-vx.x.x-testnet`. 下载程序时需要根据个人的需求选择正确的版本线。
 
 下载的 zip 包，解压后是一个 run 文件夹，里面包含如下内容：
 
 ```sh
-➜  run tree
+➜  tree
 .
 ├── conflux  # 节点程序
 ├── log.yaml # 日志配置文件
+├── pos_config # pos 相关配置
+│   ├── genesis_file
+│   ├── initial_nodes.json
+│   └── pos_config.yaml
 ├── start.bat # windows 启动脚本
 ├── start.sh # unix 启动脚本
-├── tethys.toml # 主网配置文件 v2.0 的配置文件改名为 hydra.toml
+├── hydra.toml # 主网配置文件
 └── throttling.toml # 限流配置文件
 
 0 directories, 6 files
 ```
 
-其中主要文件为 `conflux` 和 `tethys.toml (或 hydra.toml)`, 如果下载的是 windows 包的话, 节点程序为 `conflux.exe`
+其中主要文件为 `conflux` 和 `hydra.toml(或 tethys.toml)`, 如果下载的是 windows 包的话, 节点程序为 `conflux.exe`
 
 另外一种方式是从源码编译节点程序，如果有兴趣的话，可以[参考此文档](https://developer.confluxnetwork.org/conflux-doc/docs/installation)自行编译。
 
 ## 主要配置项
 
-在运行节点前需要先准备好节点配置文件，在下载的程序包里可以找到配置文件，一般主网是 `tethys.toml (或 hydra.toml)`, 测试网则为 `testnet.toml`. 两个配置文件主要区别在于 `bootnodes` 和 `chainId` 的配置值不同。开发者也可以到 `conflux-rust` Github 仓库的 `run 目录`下面查找配置文件。文件名同样为 [`tethys.toml`](https://github.com/Conflux-Chain/conflux-rust/blob/master/run/tethys.toml) 或 `testnet.toml`。
+在运行节点前需要先准备好节点配置文件，在下载的程序包里可以找到配置文件，一般主网是 `hydra.toml (或 tethys.toml)`, 测试网则为 `testnet.toml`. 两个配置文件主要区别在于 `bootnodes` 和 `chainId` 的配置值不同。开发者也可以到 `conflux-rust` Github 仓库的 `run 目录`下面查找配置文件。文件名同样为 [`hydra.toml`](https://github.com/Conflux-Chain/conflux-rust/blob/master/run/hydra.toml) 或 `testnet.toml`。
 
 **通常情况用户不需要修改任何配置，直接运行启动脚本即可**(不想了解配置细节？直接跳到下一章节运行节点)。但如果想打开某些功能或自定义节点某些行为，就需要自行设置一些配置参数，以下为最常用的一些配置：
 
@@ -63,7 +67,8 @@ Conflux 网络节点程序的获取方式，首推到官方 Github [Conflux-rust
 
 ### chainId
 
-* chainId 用于配置节点要连接的链的ID，主网为 1029, 测试网为 1 (一般不需要修改)
+* `chainId` 用于配置节点要连接的链的ID，主网为 `1029`, 测试网为 `1` (一般不需要修改)
+* `evm_chain_id` eSpace chainId, 主网为 `1030`, 测试网为 `71` (一般不需要修改)
 
 ### Miner related
 
@@ -80,11 +85,13 @@ Conflux 网络节点程序的获取方式，首推到官方 Github [Conflux-rust
 * `jsonrpc_ws_port`: websocket rpc 端口号
 * `jsonrpc_http_port`: http rpc 端口号
 * `public_rpc_apis`: 对外开放访问的 rpc api，可选值为 `all`, `safe`, `txpool`, `pos`, `cfx`, `debug`, `pubsub`, `test`, `trace` (safe=cfx+pubsub)。一般建议设置为 `safe`
-* `persist_tx_index`: `true` or `false` 如果需要处理 transaction 相关 RPCs 的话，需要同时打开此配置，不然将只能访问到最近的交易信息
-* `persist_block_number_index`: `true` or `false` 如果想要通过 blockNumber 查询 block 信息，需要打开此配置
+* `persist_tx_index`: `true` or `false` 如果需要处理 transaction 相关 RPCs 的话，需要同时打开此配置，不然将只能访问到最近的交易信息, Archive 模式下，此配置默认打开
 * `executive_trace`: `true` or `false` 是否打开 trace EVM execution 功能，如果打开 trace 会被记录到 database 中
 * `get_logs_filter_max_epoch_range`: Event log 获取方法 `cfx_getLogs` 调用，对节点性能影响很大，可以通过此选项配置 该方法一次能查询的 epoch 范围最大值
 * `get_logs_filter_max_limit`: `cfx_getLogs` 方法一次查询能够返回 log 数量的最大值
+* `jsonrpc_http_eth_port = 8545` eSpace http 端口号
+* `jsonrpc_ws_eth_port = 8546` eSpace websocket 端口号
+* `public_evm_rpc_apis = "evm"` eSpace RPC 打开的 namespace
 
 ### Snapshot 
 
@@ -100,7 +107,7 @@ Conflux 网络节点程序的获取方式，首推到官方 Github [Conflux-rust
 
 * `log_conf`: 用于指定 log 详细配置文件如 `log.yaml`，配置文件中的设置会覆盖 `log_level` 设置
 * `log_file`: 指定 log 的路径，不设置的话会输出到 stdout
-* `log_level`: 日志打印的级别，可选值为 `error`, `warn`, `info`, `debug`, `trace`, `off` 
+* `log_level`: 日志打印的级别，可选值为 `error`, `warn`, `info`, `debug`, `trace`, `off`
 
 日志的 log 级别越高，打印的日志越多，响应的会占用贡多的存储空间，也会影响节点的性能.
 
@@ -135,7 +142,7 @@ genesis_secrets = './genesis_secrets.txt'
 
 ## 运行节点
 
-配置文件配好了，就可以通过节点程序，运行节点了。
+配置文件配好了，就可以通过节点程序，运行节点了。第一次启动节点的时候需要设置 pos_key 的加密密码（一次设置，一次确认）；之后每次启动节点需要输入此密码。该密码也可以在配置文件中配置（`dev_pos_private_key_encryption_password`）
 ```sh
 # 运行启动脚本
 $ ./start.sh
@@ -221,15 +228,13 @@ Conflux v2.0 (Hydra) 是一个重大版本升级，通过 8 个不同的 CIP 引
 
 **节点首次启动会在该目录下创建一个 `pos_key`, 该文件存储了节点参与 PoS 的私钥，请妥善保管，不要错误删掉或意外泄漏**
 
-注意：若是参与V2.0 的升级`过程`则会经历两步，第一步直接升级 binary 程序和更新配置文件，这时无需添加 pos_config 文件夹。第二步则是添加 pos_config 文件夹
-
 ### 节点启动
 
 节点的启动方式没有发生变化，还是通过 `conflux` binary 程序加配置文件启动。若配置文件中未配置 `dev_pos_private_key_encryption_password` 配置项，则节点第一次启动时，会要求设置 `pos_key` 密码, 以后节点每次重启也需要通过命令行输入密码。若配置文件中加了此配置项，则启动体验跟之前保持一致。
 
 ### 节点硬盘要求
 
-由于 Conflux 网络已运行超过 1 年时间，节点数据增多不少，因此节点机器的建议硬盘大小从 200G 调整为 500G
+由于 Conflux 网络已运行超过 1 年时间，节点数据增多不少，因此节点机器的建议硬盘大小从 200G 调整为 1T(ArchiveNode)
 
 ### PoS 节点运行注意事项
 
@@ -257,7 +262,7 @@ PoS 节点的账户由 pos_key 生成并控制，该文件在节点初次启动�
 ### 为什么重启后，同步需要很久？
 
 节点重启后会从上个 checkpoint 开始同步，并重新 replay 区块数据，根据当前距离上一 checkpoint 的远近，需要等待不同的时长，才能开始从最新区块开始同步.
-这是正常现象，一般会等几分钟到十几分钟不等。
+这是正常现象，一般会等几分钟到十几分钟不等。从 conflux-rust v2.0.3 版本开始节点重启过程做了优化，可在十分钟内完成重启。
 
 ### 为什么节点同步的区块高度卡住，不再增长?
 
@@ -269,13 +274,12 @@ PoS 节点的账户由 pos_key 生成并控制，该文件在节点初次启动�
 
 * `persist_tx_index`
 * `executive_trace`
-* `persist_block_number_index`
 
 修改其他配置不需要清数据，直接重启即可.
 
 ### 目前的 archive node 数据有多大?
 
-截止到 2021.11.04 区块数据的压缩包大小为不到 90 G
+截止到 2022.8.1 区块数据的压缩包大小为不到 300 G
 
 ### 如何参与挖矿?
 
