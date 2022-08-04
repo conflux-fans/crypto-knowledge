@@ -242,7 +242,8 @@ Conflux 从 v2.0 开始引入了一个全新的网络空间 eSpace （原空间�
 
 ```js
 const { address } = require('js-conflux-sdk');
-
+> address.cfxMappedEVMSpaceAddress('cfx:aak0t61kr9vst67pwpv3rhprjaau3dvd4jtzym5mrc')
+'0xE7DB0B604Cb4DE9d8B70cC3ca927781F8c66A3D0'
 ```
 
 Core Space 账户私钥，可以通过内置合约，操控其在 eSpace 映射地址上的资产。
