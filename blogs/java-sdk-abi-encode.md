@@ -146,7 +146,7 @@ System.out.println("address array: " + abiEncodeAddressData);
 
 ### 结构体传参
 
-加入有一个简单结构体如下：
+假如有一个简单结构体如下：
 
 ```js
 struct SimpleStruct {
